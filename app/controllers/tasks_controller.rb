@@ -1,5 +1,5 @@
 class TasksController < ApplicationController
-  before_action :set_task, only: [:show, :edit, :update, :destroy]
+  before_action :set_task, only: [:show, :edit, :update, :destroy, :add_user]
 
   # GET /tasks
   # GET /tasks.json
@@ -16,6 +16,16 @@ class TasksController < ApplicationController
   def new
     @task = Task.new
   end
+
+  def add_user
+    @task.users << current_user 
+    tarea = @task.user_tasks.where(user: current_user).first
+    tarea.update ({finished: !tarea.finished})
+    # @task.user_tasks.where(user: current_user).first.update({finished: true})
+    redirect_to task_path
+  end
+
+
 
   # GET /tasks/1/edit
   def edit
