@@ -1,6 +1,3 @@
-
-
-
 <div class="container">
   <div class="row">
     <% @tasks.each_slice(4) do |row| %>
@@ -9,17 +6,16 @@
           <div class="card">
             <%= image_tag task.photo, class: 'card-img-top' %>
             <div class="body">
-            <h5> <%= task.name %> </h5>
-
+            <h5> <%= link_to task.name, task_show_path(task), method: :post %></h5>
+            
            
               <% if !task.user_tasks.where(user: current_user).first.nil? %>
-                <%= link_to "Hecha", add_user_path(current_user), method: :post, class: 'btn btn-danger' %>
+                <%= link_to "Hecha", task_remove_user_path(task), method: :delete, class: 'btn btn-danger' %>
               <% else %>
-                <%= link_to "Hacer", add_user_path(current_user), method: :post, class: 'btn btn-success' %>
+                <%= link_to "Hacer", task_add_user_path(task), method: :post, class: 'btn btn-success' %>
               <% end %>
 
-            <%= link_to 'Show', task %>
-            <%= link_to 'Edit', edit_task_path(task) %>
+            
           </div>
         </div>  
       <% end %>
@@ -28,6 +24,6 @@
   </div>
 </div>
 
-<%= link_to 'New Task', new_task_path %>
 
-<%= current_user.email %>
+
+

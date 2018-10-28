@@ -1,14 +1,15 @@
-<p id="notice"><%= notice %></p>
+<strong> <%= @task.name %> </strong>
+<br>
+<strong> Usuarios: </strong>
+<br>
 
-<p>
-  <strong>Name:</strong>
-  <%= @task.name %>
-</p>
+<% if !@users.first.nil? %>
 
-<p>
-  <strong>Photo:</strong>
-  <%= @task.photo %>
-</p>
-
-<%= link_to 'Edit', edit_task_path(@task) %> |
-<%= link_to 'Back', tasks_path %>
+  <% @users.each do |user| %>
+    <%= user.email %><br>
+  <% end %>
+<% else %>
+  <strong> Actividad sin usuarios </strong>
+<% end %>
+<br>
+<%= link_to 'Back', root_path %>

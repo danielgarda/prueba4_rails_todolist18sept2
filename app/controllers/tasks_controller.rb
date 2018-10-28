@@ -1,5 +1,5 @@
 class TasksController < ApplicationController
-  before_action :set_task, only: [:show, :edit, :update, :destroy, :add_user]
+  before_action :set_task, only: [:show, :edit, :update, :destroy, :add_user, :remove_user]
 
   # GET /tasks
   # GET /tasks.json
@@ -10,6 +10,8 @@ class TasksController < ApplicationController
   # GET /tasks/1
   # GET /tasks/1.json
   def show
+    @task = Task.find(params[:task_id])
+    @users = @task.users.all.order('created_at DESC')
   end
 
   # GET /tasks/new
@@ -18,13 +20,36 @@ class TasksController < ApplicationController
   end
 
   def add_user
-    @task.users << current_user 
-    tarea = @task.user_tasks.where(user: current_user).first
-    tarea.update ({finished: !tarea.finished})
+    @task = Task.find(params[:task_id])
+    @finished = true
+    @user_task = UserTask.new(task: @task, user: current_user, finished: @finished)
+    @user_task.save
     # @task.user_tasks.where(user: current_user).first.update({finished: true})
-    redirect_to task_path
+    redirect_to root_path
   end
 
+
+  def remove_user
+    @user = current_user
+    task = Task.find(params[:task_id])
+    @user.tasks.delete(task) 
+    redirect_to root_path
+  end
+
+  # def remove_tag
+  #   tag = Tag.find(params[:tag_id])
+  #   @movie.tags.delete(tag)
+  #   redirect_to movies_path
+  # end
+
+
+
+
+  # def remove_tag
+    # tag = Tag.find(params[:tag_id])
+    # @movie.tags.delete(tag)
+    # redirect_to movies_path
+  # end
 
 
   # GET /tasks/1/edit
@@ -74,7 +99,7 @@ class TasksController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_task
-      @task = Task.find(params[:id])
+      #@task = Task.find(params[:id])
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.
